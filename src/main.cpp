@@ -20,11 +20,99 @@ float fuzzySets[NUM_INPUTS][NUM_SETS][3] = {
     {{40, 52.5, 65}, {52.5, 65, 77.5}, {65, 77.5, 90}},  // Kelembapan1
     {{40, 52.5, 65}, {52.5, 65, 77.5}, {65, 77.5, 90}}}; // Kelembapan2
 
-// Example rule consequents array
 float ruleConsequents[NUM_RULES][2] = {
-    {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}, {20, 150}, {50, 190}, {90, 250}};
+    {20, 150},  // Rule 0: Suhu1 is Sejuk1, Suhu2 is Sejuk2, Kelembapan1 is Basah1, Kelembapan2 is Basah2
+    {50, 190},  // Rule 1: Suhu1 is Sejuk1, Suhu2 is Sejuk2, Kelembapan1 is Basah1, Kelembapan2 is Lembab2
+    {90, 250},  // Rule 2: Suhu1 is Sejuk1, Suhu2 is Sejuk2, Kelembapan1 is Basah1, Kelembapan2 is Kering2
+    {25, 155},  // Rule 3: Suhu1 is Sejuk1, Suhu2 is Sejuk2, Kelembapan1 is Lembab1, Kelembapan2 is Basah2
+    {55, 195},  // Rule 4: Suhu1 is Sejuk1, Suhu2 is Sejuk2, Kelembapan1 is Lembab1, Kelembapan2 is Lembab2
+    {95, 255},  // Rule 5: Suhu1 is Sejuk1, Suhu2 is Sejuk2, Kelembapan1 is Lembab1, Kelembapan2 is Kering2
+    {30, 160},  // Rule 6: Suhu1 is Sejuk1, Suhu2 is Sejuk2, Kelembapan1 is Kering1, Kelembapan2 is Basah2
+    {60, 200},  // Rule 7: Suhu1 is Sejuk1, Suhu2 is Sejuk2, Kelembapan1 is Kering1, Kelembapan2 is Lembab2
+    {100, 260}, // Rule 8: Suhu1 is Sejuk1, Suhu2 is Sejuk2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
 
-float inputs[NUM_INPUTS] = {30, 32, 75, 80};
+    {20, 150},  // Rule 9: Suhu1 is Sejuk1, Suhu2 is Hangat2, Kelembapan1 is Basah1, Kelembapan2 is Basah2
+    {50, 190},  // Rule 10: Suhu1 is Sejuk1, Suhu2 is Hangat2, Kelembapan1 is Basah1, Kelembapan2 is Lembab2
+    {90, 250},  // Rule 11: Suhu1 is Sejuk1, Suhu2 is Hangat2, Kelembapan1 is Basah1, Kelembapan2 is Kering2
+    {25, 155},  // Rule 12: Suhu1 is Sejuk1, Suhu2 is Hangat2, Kelembapan1 is Lembab1, Kelembapan2 is Basah2
+    {55, 195},  // Rule 13: Suhu1 is Sejuk1, Suhu2 is Hangat2, Kelembapan1 is Lembab1, Kelembapan2 is Lembab2
+    {95, 255},  // Rule 14: Suhu1 is Sejuk1, Suhu2 is Hangat2, Kelembapan1 is Lembab1, Kelembapan2 is Kering2
+    {30, 160},  // Rule 15: Suhu1 is Sejuk1, Suhu2 is Hangat2, Kelembapan1 is Kering1, Kelembapan2 is Basah2
+    {60, 200},  // Rule 16: Suhu1 is Sejuk1, Suhu2 is Hangat2, Kelembapan1 is Kering1, Kelembapan2 is Lembab2
+    {100, 260}, // Rule 17: Suhu1 is Sejuk1, Suhu2 is Hangat2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
+
+    {20, 150},  // Rule 18: Suhu1 is Sejuk1, Suhu2 is Panas2, Kelembapan1 is Basah1, Kelembapan2 is Basah2
+    {50, 190},  // Rule 19: Suhu1 is Sejuk1, Suhu2 is Panas2, Kelembapan1 is Basah1, Kelembapan2 is Lembab2
+    {90, 250},  // Rule 20: Suhu1 is Sejuk1, Suhu2 is Panas2, Kelembapan1 is Basah1, Kelembapan2 is Kering2
+    {25, 155},  // Rule 21: Suhu1 is Sejuk1, Suhu2 is Panas2, Kelembapan1 is Lembab1, Kelembapan2 is Basah2
+    {55, 195},  // Rule 22: Suhu1 is Sejuk1, Suhu2 is Panas2, Kelembapan1 is Lembab1, Kelembapan2 is Lembab2
+    {95, 255},  // Rule 23: Suhu1 is Sejuk1, Suhu2 is Panas2, Kelembapan1 is Lembab1, Kelembapan2 is Kering2
+    {30, 160},  // Rule 24: Suhu1 is Sejuk1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Basah2
+    {60, 200},  // Rule 25: Suhu1 is Sejuk1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Lembab2
+    {100, 260}, // Rule 26: Suhu1 is Sejuk1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
+
+    {20, 150},  // Rule 27: Suhu1 is Hangat1, Suhu2 is Sejuk2, Kelembapan1 is Basah1, Kelembapan2 is Basah2
+    {50, 190},  // Rule 28: Suhu1 is Hangat1, Suhu2 is Sejuk2, Kelembapan1 is Basah1, Kelembapan2 is Lembab2
+    {90, 250},  // Rule 29: Suhu1 is Hangat1, Suhu2 is Sejuk2, Kelembapan1 is Basah1, Kelembapan2 is Kering2
+    {25, 155},  // Rule 30: Suhu1 is Hangat1, Suhu2 is Sejuk2, Kelembapan1 is Lembab1, Kelembapan2 is Basah2
+    {55, 195},  // Rule 31: Suhu1 is Hangat1, Suhu2 is Sejuk2, Kelembapan1 is Lembab1, Kelembapan2 is Lembab2
+    {95, 255},  // Rule 32: Suhu1 is Hangat1, Suhu2 is Sejuk2, Kelembapan1 is Lembab1, Kelembapan2 is Kering2
+    {30, 160},  // Rule 33: Suhu1 is Hangat1, Suhu2 is Sejuk2, Kelembapan1 is Kering1, Kelembapan2 is Basah2
+    {60, 200},  // Rule 34: Suhu1 is Hangat1, Suhu2 is Sejuk2, Kelembapan1 is Kering1, Kelembapan2 is Lembab2
+    {100, 260}, // Rule 35: Suhu1 is Hangat1, Suhu2 is Sejuk2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
+
+    {20, 150},  // Rule 36: Suhu1 is Hangat1, Suhu2 is Hangat2, Kelembapan1 is Basah1, Kelembapan2 is Basah2
+    {50, 190},  // Rule 37: Suhu1 is Hangat1, Suhu2 is Hangat2, Kelembapan1 is Basah1, Kelembapan2 is Lembab2
+    {90, 250},  // Rule 38: Suhu1 is Hangat1, Suhu2 is Hangat2, Kelembapan1 is Basah1, Kelembapan2 is Kering2
+    {25, 155},  // Rule 39: Suhu1 is Hangat1, Suhu2 is Hangat2, Kelembapan1 is Lembab1, Kelembapan2 is Basah2
+    {55, 195},  // Rule 40: Suhu1 is Hangat1, Suhu2 is Hangat2, Kelembapan1 is Lembab1, Kelembapan2 is Lembab2
+    {95, 255},  // Rule 41: Suhu1 is Hangat1, Suhu2 is Hangat2, Kelembapan1 is Lembab1, Kelembapan2 is Kering2
+    {30, 160},  // Rule 42: Suhu1 is Hangat1, Suhu2 is Hangat2, Kelembapan1 is Kering1, Kelembapan2 is Basah2
+    {60, 200},  // Rule 43: Suhu1 is Hangat1, Suhu2 is Hangat2, Kelembapan1 is Kering1, Kelembapan2 is Lembab2
+    {100, 260}, // Rule 44: Suhu1 is Hangat1, Suhu2 is Hangat2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
+
+    {20, 150},  // Rule 45: Suhu1 is Hangat1, Suhu2 is Panas2, Kelembapan1 is Basah1, Kelembapan2 is Basah2
+    {50, 190},  // Rule 46: Suhu1 is Hangat1, Suhu2 is Panas2, Kelembapan1 is Basah1, Kelembapan2 is Lembab2
+    {90, 250},  // Rule 47: Suhu1 is Hangat1, Suhu2 is Panas2, Kelembapan1 is Basah1, Kelembapan2 is Kering2
+    {25, 155},  // Rule 48: Suhu1 is Hangat1, Suhu2 is Panas2, Kelembapan1 is Lembab1, Kelembapan2 is Basah2
+    {55, 195},  // Rule 49: Suhu1 is Hangat1, Suhu2 is Panas2, Kelembapan1 is Lembab1, Kelembapan2 is Lembab2
+    {95, 255},  // Rule 50: Suhu1 is Hangat1, Suhu2 is Panas2, Kelembapan1 is Lembab1, Kelembapan2 is Kering2
+    {30, 160},  // Rule 51: Suhu1 is Hangat1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Basah2
+    {60, 200},  // Rule 52: Suhu1 is Hangat1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Lembab2
+    {100, 260}, // Rule 53: Suhu1 is Hangat1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
+
+    {20, 150},  // Rule 54: Suhu1 is Panas1, Suhu2 is Sejuk2, Kelembapan1 is Basah1, Kelembapan2 is Basah2
+    {50, 190},  // Rule 55: Suhu1 is Panas1, Suhu2 is Sejuk2, Kelembapan1 is Basah1, Kelembapan2 is Lembab2
+    {90, 250},  // Rule 56: Suhu1 is Panas1, Suhu2 is Sejuk2, Kelembapan1 is Basah1, Kelembapan2 is Kering2
+    {25, 155},  // Rule 57: Suhu1 is Panas1, Suhu2 is Sejuk2, Kelembapan1 is Lembab1, Kelembapan2 is Basah2
+    {55, 195},  // Rule 58: Suhu1 is Panas1, Suhu2 is Sejuk2, Kelembapan1 is Lembab1, Kelembapan2 is Lembab2
+    {95, 255},  // Rule 59: Suhu1 is Panas1, Suhu2 is Sejuk2, Kelembapan1 is Lembab1, Kelembapan2 is Kering2
+    {30, 160},  // Rule 60: Suhu1 is Panas1, Suhu2 is Sejuk2, Kelembapan1 is Kering1, Kelembapan2 is Basah2
+    {60, 200},  // Rule 61: Suhu1 is Panas1, Suhu2 is Sejuk2, Kelembapan1 is Kering1, Kelembapan2 is Lembab2
+    {100, 260}, // Rule 62: Suhu1 is Panas1, Suhu2 is Sejuk2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
+
+    {20, 150},  // Rule 63: Suhu1 is Panas1, Suhu2 is Hangat2, Kelembapan1 is Basah1, Kelembapan2 is Basah2
+    {50, 190},  // Rule 64: Suhu1 is Panas1, Suhu2 is Hangat2, Kelembapan1 is Basah1, Kelembapan2 is Lembab2
+    {90, 250},  // Rule 65: Suhu1 is Panas1, Suhu2 is Hangat2, Kelembapan1 is Basah1, Kelembapan2 is Kering2
+    {25, 155},  // Rule 66: Suhu1 is Panas1, Suhu2 is Hangat2, Kelembapan1 is Lembab1, Kelembapan2 is Basah2
+    {55, 195},  // Rule 67: Suhu1 is Panas1, Suhu2 is Hangat2, Kelembapan1 is Lembab1, Kelembapan2 is Lembab2
+    {95, 255},  // Rule 68: Suhu1 is Panas1, Suhu2 is Hangat2, Kelembapan1 is Lembab1, Kelembapan2 is Kering2
+    {30, 160},  // Rule 69: Suhu1 is Panas1, Suhu2 is Hangat2, Kelembapan1 is Kering1, Kelembapan2 is Basah2
+    {60, 200},  // Rule 70: Suhu1 is Panas1, Suhu2 is Hangat2, Kelembapan1 is Kering1, Kelembapan2 is Lembab2
+    {100, 260}, // Rule 71: Suhu1 is Panas1, Suhu2 is Hangat2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
+
+    {20, 150},  // Rule 72: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Basah1, Kelembapan2 is Basah2
+    {50, 190},  // Rule 73: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Basah1, Kelembapan2 is Lembab2
+    {90, 250},  // Rule 74: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Basah1, Kelembapan2 is Kering2
+    {25, 155},  // Rule 75: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Lembab1, Kelembapan2 is Basah2
+    {55, 195},  // Rule 76: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Lembab1, Kelembapan2 is Lembab2
+    {95, 255},  // Rule 77: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Lembab1, Kelembapan2 is Kering2
+    {30, 160},  // Rule 78: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Basah2
+    {60, 200},  // Rule 79: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Lembab2
+    {100, 260}, // Rule 80: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
+};
+
+float inputs[NUM_INPUTS] = {34.1, 34.7, 44.5, 47.1};
 
 void fuzzify(float inputs[], float fuzzyValues[][NUM_SETS])
 {
