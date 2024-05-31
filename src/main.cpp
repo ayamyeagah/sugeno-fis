@@ -231,15 +231,6 @@ void loop()
         float in_hum1 = dht1.readHumidity();
         float in_hum2 = dht2.readHumidity();
 
-        Serial.print("suhu1: ");
-        Serial.print(in_temp1);
-        Serial.print(" | suhu2: ");
-        Serial.print(in_temp2);
-        Serial.print(" | hum1: ");
-        Serial.print(in_hum1);
-        Serial.print(" | hum2: ");
-        Serial.print(in_hum2);
-
         // fuzzy
         float inputs[NUM_INPUTS] = {in_temp1, in_temp2, in_hum1, in_hum2};
 
@@ -249,11 +240,6 @@ void loop()
         float outputs[2];
         evaluateRules(fuzzyValues, outputs);
 
-        Serial.print(" | Heater: ");
-        Serial.println(outputs[0]);
-        Serial.print(" | Kipas: ");
-        Serial.println(outputs[1]);
-
         // dimmer
         dimmer.setPower(outputs[0]);
 
@@ -262,7 +248,7 @@ void loop()
         digitalWrite(IN1, HIGH);
         digitalWrite(IN2, LOW);
 
-        // Display LCD
+        // lcd
         lcd.setCursor(0, 0);
         lcd.print("T1:");
         lcd.print(in_temp1, 1);
@@ -275,5 +261,19 @@ void loop()
         lcd.setCursor(8, 1);
         lcd.print("FA:");
         lcd.print(outputs[1], 1);
+
+        // print
+        Serial.print("suhu1: ");
+        Serial.print(in_temp1);
+        Serial.print(" | suhu2: ");
+        Serial.print(in_temp2);
+        Serial.print(" | hum1: ");
+        Serial.print(in_hum1);
+        Serial.print(" | hum2: ");
+        Serial.print(in_hum2);
+        Serial.print(" | heater: ");
+        Serial.print(outputs[0]);
+        Serial.print(" | kipas: ");
+        Serial.println(outputs[1]);
     }
 }
