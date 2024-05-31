@@ -1,17 +1,36 @@
 #include <Arduino.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 #include <DHT.h>
+#include <RBDdimmer.h>
 
 // millis
 unsigned long cetakPerDetik = 0;
+
+// lcd
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // dht
 #define DHT1_PIN 33
 #define DHT2_PIN 27
 #define DHTTYPE DHT22
-
 DHT dht1(DHT1_PIN, DHTTYPE);
 DHT dht2(DHT2_PIN, DHTTYPE);
 
+// dimmer
+#define outDimmer 32
+#define ZC 35
+dimmerLamp dimmer(outDimmer, ZC);
+
+// l298n
+#define IN1 15
+#define IN2 14
+#define ENA 4
+const int freq = 5000;
+const int ledChannel = 0;
+const int resolution = 8;
+
+// fuzzy inference system
 const int NUM_INPUTS = 4;
 const int NUM_SETS = 3;
 const int NUM_RULES = 81;
@@ -187,6 +206,17 @@ void setup()
 
     dht1.begin();
     dht2.begin();
+
+    dimmer.begin(NORMAL_MODE, ON);
+
+    pinMode(IN1, OUTPUT);
+    pinMode(IN2, OUTPUT);
+    ledcSetup(ledChannel, freq, resolution);
+    ledcAttachPin(ENA, ledChannel);
+
+    lcd.init();
+    lcd.clear();
+    lcd.backlight();
 }
 
 void loop()
@@ -208,7 +238,7 @@ void loop()
         Serial.print(" | hum1: ");
         Serial.print(in_hum1);
         Serial.print(" | hum2: ");
-        Serial.println(in_hum2);
+        Serial.print(in_hum2);
 
         // fuzzy
         float inputs[NUM_INPUTS] = {in_temp1, in_temp2, in_hum1, in_hum2};
@@ -219,9 +249,31 @@ void loop()
         float outputs[2];
         evaluateRules(fuzzyValues, outputs);
 
-        Serial.print("Heating Lamp Output: ");
+        Serial.print(" | Heater: ");
         Serial.println(outputs[0]);
-        Serial.print("Kipas DC Output: ");
+        Serial.print(" | Kipas: ");
         Serial.println(outputs[1]);
+
+        // dimmer
+        dimmer.setPower(outputs[0]);
+
+        // fan
+        ledcWrite(ledChannel, outputs[1]);
+        digitalWrite(IN1, HIGH);
+        digitalWrite(IN2, LOW);
+
+        // Display LCD
+        lcd.setCursor(0, 0);
+        lcd.print("T1:");
+        lcd.print(in_temp1, 1);
+        lcd.setCursor(7, 0);
+        lcd.print(" H1:");
+        lcd.print(in_hum1, 1);
+        lcd.setCursor(0, 1);
+        lcd.print("HE:");
+        lcd.print(outputs[0], 1);
+        lcd.setCursor(8, 1);
+        lcd.print("FA:");
+        lcd.print(outputs[1], 1);
     }
 }
