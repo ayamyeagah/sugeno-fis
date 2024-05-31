@@ -1,4 +1,16 @@
 #include <Arduino.h>
+#include <DHT.h>
+
+// millis
+unsigned long cetakPerDetik = 0;
+
+// dht
+#define DHT1_PIN 33
+#define DHT2_PIN 27
+#define DHTTYPE DHT22
+
+DHT dht1(DHT1_PIN, DHTTYPE);
+DHT dht2(DHT2_PIN, DHTTYPE);
 
 const int NUM_INPUTS = 4;
 const int NUM_SETS = 3;
@@ -112,7 +124,7 @@ float ruleConsequents[NUM_RULES][2] = {
     {100, 260}, // Rule 80: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
 };
 
-float inputs[NUM_INPUTS] = {34.1, 34.7, 44.5, 47.1};
+// float inputs[NUM_INPUTS] = {34.1, 34.7, 44.5, 47.1};
 
 void fuzzify(float inputs[], float fuzzyValues[][NUM_SETS])
 {
@@ -172,19 +184,44 @@ void evaluateRules(float fuzzyValues[][NUM_SETS], float outputs[])
 void setup()
 {
     Serial.begin(115200);
-    float fuzzyValues[NUM_INPUTS][NUM_SETS];
-    fuzzify(inputs, fuzzyValues);
 
-    float outputs[2];
-    evaluateRules(fuzzyValues, outputs);
-
-    Serial.print("Heating Lamp Output: ");
-    Serial.println(outputs[0]);
-    Serial.print("Kipas DC Output: ");
-    Serial.println(outputs[1]);
+    dht1.begin();
+    dht2.begin();
 }
 
 void loop()
 {
-    // Put your main code here, to run repeatedly
+    if (millis() - cetakPerDetik >= 5000)
+    {
+        cetakPerDetik = millis();
+
+        // dht
+        float in_temp1 = dht1.readTemperature();
+        float in_temp2 = dht2.readTemperature();
+        float in_hum1 = dht1.readHumidity();
+        float in_hum2 = dht2.readHumidity();
+
+        Serial.print("suhu1: ");
+        Serial.print(in_temp1);
+        Serial.print(" | suhu2: ");
+        Serial.print(in_temp2);
+        Serial.print(" | hum1: ");
+        Serial.print(in_hum1);
+        Serial.print(" | hum2: ");
+        Serial.println(in_hum2);
+
+        // fuzzy
+        float inputs[NUM_INPUTS] = {in_temp1, in_temp2, in_hum1, in_hum2};
+
+        float fuzzyValues[NUM_INPUTS][NUM_SETS];
+        fuzzify(inputs, fuzzyValues);
+
+        float outputs[2];
+        evaluateRules(fuzzyValues, outputs);
+
+        Serial.print("Heating Lamp Output: ");
+        Serial.println(outputs[0]);
+        Serial.print("Kipas DC Output: ");
+        Serial.println(outputs[1]);
+    }
 }
