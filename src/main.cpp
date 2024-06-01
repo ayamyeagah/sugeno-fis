@@ -161,8 +161,6 @@ float ruleConsequents[NUM_RULES][2] = {
     {100, 260}, // Rule 80: Suhu1 is Panas1, Suhu2 is Panas2, Kelembapan1 is Kering1, Kelembapan2 is Kering2
 };
 
-// float inputs[NUM_INPUTS] = {34.1, 34.7, 44.5, 47.1};
-
 void fuzzify(float inputs[], float fuzzyValues[][NUM_SETS])
 {
     for (int i = 0; i < NUM_INPUTS; i++)
@@ -290,7 +288,7 @@ void loop()
         int x = ThingSpeak.writeFields(channel_ID, apiKey);
         if (x == 200)
         {
-            Serial.println("Channel update successful.");
+            Serial.println("Channel updated.");
         }
         else
         {
