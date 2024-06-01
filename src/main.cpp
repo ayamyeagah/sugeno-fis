@@ -1,8 +1,20 @@
 #include <Arduino.h>
+#include <WiFi.h>
 #include <Wire.h>
+#include "env.h"
+#include <ThingSpeak.h>
 #include <LiquidCrystal_I2C.h>
 #include <DHT.h>
 #include <RBDdimmer.h>
+
+// wifi
+char ssid[] = SECRET_SSID;
+char pass[] = SECRET_PASS;
+WiFiClient client;
+
+// thing speak
+unsigned long channel_ID = SECRET_CH_ID;
+const char *apiKey = SECRET_WRITE_APIKEY;
 
 // millis
 unsigned long cetakPerDetik = 0;
@@ -16,11 +28,16 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 #define DHTTYPE DHT22
 DHT dht1(DHT1_PIN, DHTTYPE);
 DHT dht2(DHT2_PIN, DHTTYPE);
+float in_temp1;
+float in_temp2;
+float in_hum1;
+float in_hum2;
 
 // dimmer
 #define outDimmer 32
 #define ZC 35
 dimmerLamp dimmer(outDimmer, ZC);
+float out_heater;
 
 // l298n
 #define IN1 15
@@ -29,6 +46,7 @@ dimmerLamp dimmer(outDimmer, ZC);
 const int freq = 5000;
 const int ledChannel = 0;
 const int resolution = 8;
+float out_fan;
 
 // fuzzy inference system
 const int NUM_INPUTS = 4;
@@ -204,6 +222,22 @@ void setup()
 {
     Serial.begin(115200);
 
+    WiFi.mode(WIFI_STA);
+    if (WiFi.status() != WL_CONNECTED)
+    {
+        Serial.print("Attempting to connect to SSID: ");
+        Serial.println(SECRET_SSID);
+        while (WiFi.status() != WL_CONNECTED)
+        {
+            WiFi.begin(ssid, pass);
+        }
+        Serial.print(".");
+        delay(5000);
+        Serial.println("\nConnected.");
+    }
+
+    ThingSpeak.begin(client);
+
     dht1.begin();
     dht2.begin();
 
@@ -221,15 +255,23 @@ void setup()
 
 void loop()
 {
-    if (millis() - cetakPerDetik >= 5000)
+    if (millis() - cetakPerDetik >= 10000)
     {
         cetakPerDetik = millis();
 
+        // thingspeak set fields
+        ThingSpeak.setField(1, in_temp1);
+        ThingSpeak.setField(2, in_hum1);
+        ThingSpeak.setField(3, in_temp2);
+        ThingSpeak.setField(4, in_hum2);
+        ThingSpeak.setField(5, out_heater);
+        ThingSpeak.setField(6, out_fan);
+
         // dht
-        float in_temp1 = dht1.readTemperature();
-        float in_temp2 = dht2.readTemperature();
-        float in_hum1 = dht1.readHumidity();
-        float in_hum2 = dht2.readHumidity();
+        in_temp1 = dht1.readTemperature();
+        in_temp2 = dht2.readTemperature();
+        in_hum1 = dht1.readHumidity();
+        in_hum2 = dht2.readHumidity();
 
         // fuzzy
         float inputs[NUM_INPUTS] = {in_temp1, in_temp2, in_hum1, in_hum2};
@@ -240,11 +282,26 @@ void loop()
         float outputs[2];
         evaluateRules(fuzzyValues, outputs);
 
+        // assign output to var
+        out_heater = outputs[0];
+        out_fan = outputs[1];
+
+        // write to thingspeak
+        int x = ThingSpeak.writeFields(channel_ID, apiKey);
+        if (x == 200)
+        {
+            Serial.println("Channel update successful.");
+        }
+        else
+        {
+            Serial.println("Problem updating channel. HTTP error code " + String(x));
+        }
+
         // dimmer
-        dimmer.setPower(outputs[0]);
+        dimmer.setPower(out_heater);
 
         // fan
-        ledcWrite(ledChannel, outputs[1]);
+        ledcWrite(ledChannel, out_fan);
         digitalWrite(IN1, HIGH);
         digitalWrite(IN2, LOW);
 
@@ -257,10 +314,10 @@ void loop()
         lcd.print(in_hum1, 1);
         lcd.setCursor(0, 1);
         lcd.print("HE:");
-        lcd.print(outputs[0], 1);
+        lcd.print(out_heater, 1);
         lcd.setCursor(8, 1);
         lcd.print("FA:");
-        lcd.print(outputs[1], 1);
+        lcd.print(out_fan, 1);
 
         // print
         Serial.print("suhu1: ");
@@ -272,8 +329,8 @@ void loop()
         Serial.print(" | hum2: ");
         Serial.print(in_hum2);
         Serial.print(" | heater: ");
-        Serial.print(outputs[0]);
+        Serial.print(out_heater);
         Serial.print(" | kipas: ");
-        Serial.println(outputs[1]);
+        Serial.println(out_fan);
     }
 }

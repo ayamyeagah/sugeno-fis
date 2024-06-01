@@ -1,2 +1,5 @@
 .pio
 .vscode
+
+# environment
+env.h
